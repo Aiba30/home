@@ -1,0 +1,24 @@
+.title {
+	text-align: center;
+}
+
+.container {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	padding: 20px;
+}
+
+
+.clearBtn,
+.removeBtn {
+	background: red;
+	font-size: 20px;
+	color: white;
+	padding: 10px 15px;
+	border-radius: 5px;
+}
+
+.removeBtn {
+	padding: 2px 5px;
+}

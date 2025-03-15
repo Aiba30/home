@@ -1,0 +1,19 @@
+.block {
+	display: flex;
+	gap: 2px;
+	align-items: center;
+}
+
+.btn {
+	background: rgb(16, 244, 24);
+	border-radius: 2px;
+	padding: 6px 8px;
+}
+
+select {
+	height: 25px;
+}
+
+input {
+	font-size: 18px;
+}

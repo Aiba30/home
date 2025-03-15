@@ -1,0 +1,42 @@
+.container {
+	display: flex;
+	justify-content: center;
+	gap: 50px;
+}
+
+.container>div {
+	border: 2px solid;
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+}
+
+.container button {
+	background: rgb(152, 102, 8);
+	padding: 3px 5px;
+	border-radius: 5px;
+	color: white;
+}
+
+.price {
+	font-size: 20px;
+	font-weight: 700;
+}
+
+.name {
+	font-size: 24px;
+	text-transform: uppercase;
+}
+
+.counterContainer {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-size: 18px;
+}
+
+.counterContainer button {
+	font-size: 20px;
+}
