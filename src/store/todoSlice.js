@@ -6,6 +6,7 @@ const initialState = {
   filteredTodos: localStorage.getItem("todos")
     ? JSON.parse(localStorage.getItem("todos"))
     : [],
+  currentFilter: "all",
 };
 const todoSlice = createSlice({
   name: "todo",
@@ -26,12 +27,16 @@ const todoSlice = createSlice({
       }
     },
     removeTodoItem(state, action) {
-      const filteredTodos = state.todos.filter(
-        (todo) => todo.id !== action.payload
-      );
-      state.todos = filteredTodos;
-      localStorage.setItem("todos", JSON.stringify(filteredTodos));
-      state.filteredTodos = state.todos;
+      state.todos = state.todos.filter((todo) => todo.id !== action.payload);
+      localStorage.setItem("todos", JSON.stringify(state.todos));
+
+      if (state.currentFilter === "active") {
+        state.filteredTodos = state.todos.filter((todo) => !todo.completed);
+      } else if (state.currentFilter === "completed") {
+        state.filteredTodos = state.todos.filter((todo) => todo.completed);
+      } else {
+        state.filteredTodos = state.todos;
+      }
     },
     completeTodoItem(state, action) {
       const todo = state.todos.find((todo) => todo.id === action.payload);
@@ -42,6 +47,7 @@ const todoSlice = createSlice({
       }
     },
     setFilter(state, action) {
+      state.currentFilter = action.payload;
       if (action.payload === "active") {
         state.filteredTodos = state.todos.filter((todo) => !todo.completed);
       } else if (action.payload === "completed") {
