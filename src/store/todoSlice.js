@@ -1,65 +1,72 @@
 import { createSlice } from "@reduxjs/toolkit";
+import {
+  addTodo,
+  fetchTodos,
+  removeTodo,
+  setFilter,
+  toggleCompleted,
+} from "../api/todoApi";
 const initialState = {
-  todos: localStorage.getItem("todos")
-    ? JSON.parse(localStorage.getItem("todos"))
-    : [],
-  filteredTodos: localStorage.getItem("todos")
-    ? JSON.parse(localStorage.getItem("todos"))
-    : [],
-  currentFilter: "all",
+  todos: [],
+  loading: false,
+  error: null,
 };
+
 const todoSlice = createSlice({
   name: "todo",
   initialState,
-  reducers: {
-    addTodoItem(state, { payload }) {
-      const inList = state.todos.find((item) => item.text === payload);
-      if (inList) {
-        alert("Эта задача уже есть в списке");
-      } else {
-        state.todos.push({
-          id: new Date().toISOString(),
-          text: payload,
-          completed: false,
-        });
-        localStorage.setItem("todos", JSON.stringify(state.todos));
-        state.filteredTodos = state.todos;
-      }
-    },
-    removeTodoItem(state, action) {
-      state.todos = state.todos.filter((todo) => todo.id !== action.payload);
-      localStorage.setItem("todos", JSON.stringify(state.todos));
-
-      if (state.currentFilter === "active") {
-        state.filteredTodos = state.todos.filter((todo) => !todo.completed);
-      } else if (state.currentFilter === "completed") {
-        state.filteredTodos = state.todos.filter((todo) => todo.completed);
-      } else {
-        state.filteredTodos = state.todos;
-      }
-    },
-    completeTodoItem(state, action) {
-      const todo = state.todos.find((todo) => todo.id === action.payload);
-      if (todo) {
-        todo.completed = !todo.completed;
-        localStorage.setItem("todos", JSON.stringify(state.todos));
-        state.filteredTodos = state.todos;
-      }
-    },
-    setFilter(state, action) {
-      state.currentFilter = action.payload;
-      if (action.payload === "active") {
-        state.filteredTodos = state.todos.filter((todo) => !todo.completed);
-      } else if (action.payload === "completed") {
-        state.filteredTodos = state.todos.filter((todo) => todo.completed);
-      } else {
-        state.filteredTodos = state.todos;
-      }
-    },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchTodos.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchTodos.fulfilled, (state, action) => {
+        state.loading = false;
+        state.todos = action.payload;
+      })
+      .addCase(fetchTodos.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(addTodo.fulfilled, (state, action) => {
+        state.todos.push(action.payload);
+      })
+      .addCase(addTodo.rejected, (state, action) => {
+        state.error = action.payload;
+      })
+      .addCase(removeTodo.fulfilled, (state, action) => {
+        state.todos = state.todos.filter((todo) => todo.id !== action.payload);
+      })
+      .addCase(removeTodo.rejected, (state, action) => {
+        state.error = action.payload;
+      })
+      .addCase(toggleCompleted.fulfilled, (state, action) => {
+        const updatedTodo = action.payload;
+        const index = state.todos.findIndex(
+          (todo) => todo.id === updatedTodo.id
+        );
+        if (index !== -1) {
+          state.todos[index] = updatedTodo;
+        }
+      })
+      .addCase(toggleCompleted.rejected, (state, action) => {
+        state.error = action.payload;
+      })
+      .addCase(setFilter.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(setFilter.fulfilled, (state, action) => {
+        state.loading = false;
+        state.todos = action.payload;
+      })
+      .addCase(setFilter.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
-
-export const { addTodoItem, removeTodoItem, completeTodoItem, setFilter } =
-  todoSlice.actions;
 
 export default todoSlice.reducer;

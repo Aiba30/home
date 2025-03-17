@@ -1,0 +1,31 @@
+{
+  "todos": [],
+  "products": [
+    {
+      "id": "1",
+      "name": "milk",
+      "price": 90,
+      "amount": 3
+    },
+    {
+      "id": "2",
+      "name": "bread",
+      "price": 30,
+      "amount": 3
+    },
+    {
+      "id": "3",
+      "name": "water",
+      "price": 50,
+      "amount": 2
+    }
+  ],
+  "cart": [
+    {
+      "id": "2",
+      "name": "bread",
+      "price": 30,
+      "amount": 3
+    }
+  ]
+}

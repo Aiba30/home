@@ -1,22 +1,22 @@
 import { useRef, useState } from "react";
-import { addTodoItem, setFilter } from "../../store/todoSlice";
 import { useDispatch } from "react-redux";
 import styles from "./inputField.module.css";
+import { addTodo, setFilter } from "../../api/todoApi";
 export const InputField = () => {
   const dispatch = useDispatch();
   const [text, setText] = useState("");
   const [value, setValue] = useState("all");
   const ref = useRef();
-  function addTodo() {
+  function addTodoItem() {
     if (text.trim().length) {
-      dispatch(addTodoItem(text));
+      dispatch(addTodo(text));
       setText("");
       ref.current.focus();
     }
   }
   function add(event) {
     if (event.key !== "Enter" || !text.trim().length) return;
-    dispatch(addTodoItem(text));
+    dispatch(addTodo(text));
     setText("");
   }
   function handleChange(event) {
@@ -33,7 +33,7 @@ export const InputField = () => {
         type="text"
         id=""
       />
-      <button className={styles.btn} onClick={addTodo}>
+      <button className={styles.btn} onClick={addTodoItem}>
         add
       </button>
       <select value={value} onChange={handleChange} id="">

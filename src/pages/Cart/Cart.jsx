@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./cart.module.css";
-import { clearCart, removeFromCart } from "../../store/cartSlice";
+import { useEffect } from "react";
+import { clearCart, fetchCart, removeFromCart } from "../../api/cartApi";
 export const Cart = () => {
   const { cartElems } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
@@ -13,10 +14,13 @@ export const Cart = () => {
       0
     );
   }
+  useEffect(() => {
+    dispatch(fetchCart());
+  }, []);
   return (
     <div>
       <h1 className={styles.title}>Cart</h1>
-      {cartElems.length ? (
+      {cartElems && cartElems.length ? (
         <>
           <div className={styles.container}>
             {cartElems.map((product) => {
@@ -30,7 +34,7 @@ export const Cart = () => {
                   </p>
                   <button
                     className={styles.removeBtn}
-                    onClick={() => dispatch(removeFromCart({ id: product.id }))}
+                    onClick={() => dispatch(removeFromCart(product.id))}
                   >
                     удалить товар
                   </button>

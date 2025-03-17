@@ -1,20 +1,38 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { products } from "../../mock";
-
+import {
+  amountDecrement,
+  amountIncrement,
+  fetchProducts,
+} from "../api/productsApi";
 const productSlice = createSlice({
   name: "products",
   initialState: {
-    products: [...products],
+    products: [],
+    loading: false,
+    error: null,
   },
-  reducers: {
-    increment(state, { payload }) {
-      const prod = state.products.find((product) => product.id === payload.id);
-      prod.amount += 1;
-    },
-    decrement(state, { payload }) {
-      const prod = state.products.find((product) => product.id === payload.id);
-      if (prod.amount > 1) prod.amount -= 1;
-    },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchProducts.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchProducts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.products = action.payload;
+      })
+      .addCase(fetchProducts.rejected, (state, action) => {
+        state.error = action.payload;
+      })
+      .addCase(amountIncrement.fulfilled, (state, { payload }) => {
+        const product = state.products.find((prod) => prod.id === payload.id);
+        product.amount = payload.amount;
+      })
+      .addCase(amountDecrement.fulfilled, (state, { payload }) => {
+        const product = state.products.find((prod) => prod.id === payload.id);
+        product.amount = payload.amount;
+      });
   },
 });
 

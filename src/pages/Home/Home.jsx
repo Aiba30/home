@@ -3,19 +3,26 @@ import { InputField } from "../../components/InputField/InputField";
 import { TodoList } from "../../components/TodoList/TodoList";
 import styles from "./home.module.css";
 import { useNavigate } from "react-router-dom";
-import { decrement, increment } from "../../store/productSlice";
-import { addToCart } from "../../store/cartSlice";
+import { useEffect } from "react";
+import {
+  amountDecrement,
+  amountIncrement,
+  fetchProducts,
+} from "../../api/productsApi";
+import { addToCart } from "../../api/cartApi";
 
 export const Home = () => {
   const { products } = useSelector((state) => state.products);
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
-  function addInCart(id, count) {
-    dispatch(addToCart({ id, count }));
+  function addInCart(id) {
+    dispatch(addToCart(id));
     navigate("/cart");
   }
-
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, []);
   return (
     <>
       <div className="todo-container">
@@ -30,17 +37,15 @@ export const Home = () => {
               <p className={styles.name}>{product.name}</p>
               <p className={styles.price}>{product.price}</p>
               <div className={styles.counterContainer}>
-                <button onClick={() => dispatch(increment({ id: product.id }))}>
+                <button onClick={() => dispatch(amountIncrement(product.id))}>
                   +
                 </button>
                 <span>{product.amount}</span>
-                <button onClick={() => dispatch(decrement({ id: product.id }))}>
+                <button onClick={() => dispatch(amountDecrement(product.id))}>
                   -
                 </button>
               </div>
-              <button onClick={() => addInCart(product.id, product.amount)}>
-                добавить
-              </button>
+              <button onClick={() => addInCart(product.id)}>добавить</button>
             </div>
           );
         })}

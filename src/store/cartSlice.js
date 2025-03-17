@@ -1,37 +1,49 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { products } from "../../mock";
+import {
+  addToCart,
+  clearCart,
+  fetchCart,
+  removeFromCart,
+} from "../api/cartApi";
 
 const cartSlice = createSlice({
   name: "cart",
   initialState: {
-    cartElems: localStorage.getItem("cart")
-      ? JSON.parse(localStorage.getItem("cart"))
-      : [],
+    cartElems: [],
+    loading: false,
+    error: null,
   },
-  reducers: {
-    addToCart(state, { payload }) {
-      const elem = products.find((product) => product.id === payload.id);
-      const inCart = state.cartElems.find((prod) => prod.id === elem.id);
-      if (inCart) inCart.amount = payload.count;
-      else
-        state.cartElems.push({
-          ...elem,
-          amount: payload.count,
-        });
-      localStorage.setItem("cart", JSON.stringify(state.cartElems));
-    },
-    removeFromCart(state, { payload }) {
-      state.cartElems = state.cartElems.filter(
-        (prod) => prod.id !== payload.id
-      );
-      localStorage.setItem("cart", JSON.stringify(state.cartElems));
-    },
-    clearCart(state) {
-      state.cartElems = [];
-      localStorage.setItem("cart", JSON.stringify(state.cartElems));
-    },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchCart.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchCart.fulfilled, (state, action) => {
+        state.loading = false;
+        state.cartElems = action.payload;
+      })
+      .addCase(fetchCart.rejected, (state, action) => {
+        state.error = action.payload;
+      })
+      .addCase(addToCart.fulfilled, (state, action) => {
+        const existing = state.cartElems.find(
+          (item) => item.id === action.payload.id
+        );
+        if (existing) {
+          existing.amount = action.payload.amount;
+        } else state.cartElems.push(action.payload);
+      })
+      .addCase(removeFromCart.fulfilled, (state, action) => {
+        state.cartElems = state.cartElems.filter(
+          (item) => item.id !== action.payload
+        );
+      })
+      .addCase(clearCart.fulfilled, (state, action) => {
+        state.cartElems = action.payload;
+      });
   },
 });
 
-export const { addToCart, removeFromCart, clearCart } = cartSlice.actions;
 export default cartSlice.reducer;
