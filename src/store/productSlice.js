@@ -10,6 +10,7 @@ const productSlice = createSlice({
     products: [],
     loading: false,
     error: null,
+    totalPages: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -20,7 +21,8 @@ const productSlice = createSlice({
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.loading = false;
-        state.products = action.payload;
+        state.products = action.payload.data;
+        state.totalPages = action.payload.pages;
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.error = action.payload;

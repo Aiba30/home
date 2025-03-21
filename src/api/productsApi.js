@@ -2,11 +2,14 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 const baseURL = `http://localhost:3001/products`;
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
-  async (_, { rejectWithValue }) => {
+  async (currentPage, { rejectWithValue }) => {
     try {
-      const response = await fetch(baseURL);
+      const response = await fetch(
+        baseURL + `?_page=${currentPage}&_per_page=3`
+      );
       if (!response.ok) throw new Error("Server Error");
-      return await response.json();
+      const { data, pages } = await response.json();
+      return { data, pages };
     } catch (error) {
       return rejectWithValue(error.message);
     }

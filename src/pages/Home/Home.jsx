@@ -3,7 +3,7 @@ import { InputField } from "../../components/InputField/InputField";
 import { TodoList } from "../../components/TodoList/TodoList";
 import styles from "./home.module.css";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   amountDecrement,
   amountIncrement,
@@ -12,17 +12,24 @@ import {
 import { addToCart } from "../../api/cartApi";
 
 export const Home = () => {
-  const { products } = useSelector((state) => state.products);
+  const { products, totalPages } = useSelector((state) => state.products);
   const dispatch = useDispatch();
-
+  const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
   function addInCart(id) {
     dispatch(addToCart(id));
     navigate("/cart");
   }
   useEffect(() => {
-    dispatch(fetchProducts());
-  }, []);
+    dispatch(fetchProducts(currentPage));
+  }, [currentPage]);
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
   return (
     <>
       <div className="todo-container">
@@ -49,6 +56,12 @@ export const Home = () => {
             </div>
           );
         })}
+        <button className={styles.paginateBtn} onClick={handleNextPage}>
+          next
+        </button>
+        <button className={styles.paginateBtn} onClick={handlePrevPage}>
+          back
+        </button>
       </div>
     </>
   );

@@ -5,7 +5,7 @@
       "id": "1",
       "name": "milk",
       "price": 90,
-      "amount": 3
+      "amount": 4
     },
     {
       "id": "2",
@@ -18,6 +18,60 @@
       "name": "water",
       "price": 50,
       "amount": 2
+    },
+    {
+      "id": "4",
+      "name": "tea",
+      "price": 47,
+      "amount": 1
+    },
+    {
+      "id": "5",
+      "name": "apple",
+      "price": 90,
+      "amount": 1
+    },
+    {
+      "id": "6",
+      "name": "banana",
+      "price": 250,
+      "amount": 1
+    },
+    {
+      "id": "7",
+      "name": "ice-cream",
+      "price": 36,
+      "amount": 1
+    },
+    {
+      "id": "8",
+      "name": "pasta",
+      "price": 85,
+      "amount": 1
+    },
+    {
+      "id": "9",
+      "name": "cola",
+      "price": 55,
+      "amount": 1
+    },
+    {
+      "id": "10",
+      "name": "chicken",
+      "price": 300,
+      "amount": 1
+    },
+    {
+      "id": "11",
+      "name": "peanut",
+      "price": 77,
+      "amount": 1
+    },
+    {
+      "id": "12",
+      "name": "chery",
+      "price": 227,
+      "amount": 1
     }
   ],
   "cart": [
